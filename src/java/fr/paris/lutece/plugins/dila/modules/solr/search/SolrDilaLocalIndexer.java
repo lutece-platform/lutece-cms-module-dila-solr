@@ -31,12 +31,9 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.comarquage.modules.solr.search;
+package fr.paris.lutece.plugins.dila.modules.solr.search;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import fr.paris.lutece.plugins.comarquage.modules.solr.utils.parsers.CoMarquageSolrPublicParser;
+import fr.paris.lutece.plugins.dila.modules.solr.utils.parsers.DilaSolrLocalParser;
 import fr.paris.lutece.plugins.search.solr.business.field.Field;
 import fr.paris.lutece.plugins.search.solr.indexer.SolrIndexer;
 import fr.paris.lutece.plugins.search.solr.indexer.SolrIndexerService;
@@ -44,24 +41,27 @@ import fr.paris.lutece.plugins.search.solr.indexer.SolrItem;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
- * The Comarquage indexer for Solr search platform
- *
+ * The Dila indexer for Solr search platform
+ * 
  */
-public class SolrComarquagePublicIndexer implements SolrIndexer
+public class SolrDilaLocalIndexer implements SolrIndexer
 {
-    private static final String PROPERTY_DESCRIPTION = "comarquage-solr.indexing.publicIndexer.description";
-    private static final String PROPERTY_NAME = "comarquage-solr.indexing.publicIndexer.name";
-    private static final String PROPERTY_VERSION = "comarquage-solr.indexing.publicIndexer.version";
-    private static final String PROPERTY_INDEXER_ENABLE = "comarquage-solr.indexing.publicIndexer.enable";
+    private static final String PROPERTY_DESCRIPTION = "dila-solr.indexing.localIndexer.description";
+    private static final String PROPERTY_NAME = "dila-solr.indexing.localIndexer.name";
+    private static final String PROPERTY_VERSION = "dila-solr.indexing.localIndexer.version";
+    private static final String PROPERTY_INDEXER_ENABLE = "dila-solr.indexing.localIndexer.enable";
 
-    private static final String COM_INDEXATION_ERROR = "[SolrComarquagePublicIndexer] An error occured during the indexation of a plublic element ";
-    
+    private static final String COM_INDEXATION_ERROR = "[SolrDilaLocalIndexer] An error occured during the indexation of a local element ";
+
     /**
      * {@inheritDoc}
      */
-    public String getDescription(  )
+    public String getDescription( )
     {
         return AppPropertiesService.getProperty( PROPERTY_DESCRIPTION );
     }
@@ -69,7 +69,7 @@ public class SolrComarquagePublicIndexer implements SolrIndexer
     /**
      * {@inheritDoc}
      */
-    public String getName(  )
+    public String getName( )
     {
         return AppPropertiesService.getProperty( PROPERTY_NAME );
     }
@@ -77,7 +77,7 @@ public class SolrComarquagePublicIndexer implements SolrIndexer
     /**
      * {@inheritDoc}
      */
-    public String getVersion(  )
+    public String getVersion( )
     {
         return AppPropertiesService.getProperty( PROPERTY_VERSION );
     }
@@ -85,36 +85,36 @@ public class SolrComarquagePublicIndexer implements SolrIndexer
     /**
      * {@inheritDoc}
      */
-    public List<String> indexDocuments(  )
+    public List<String> indexDocuments( )
     {
-        // Parses the Public cards
-        CoMarquageSolrPublicParser localParser = new CoMarquageSolrPublicParser(  );
+        // Parses the local cards
+        DilaSolrLocalParser localParser = new DilaSolrLocalParser( );
 
         // Gets the list of solr documents (to add to the index)
-        List<SolrItem> listDocuments = localParser.getPublicSolrItems(  );
+        List<SolrItem> listDocuments = localParser.getLocalSolrItems( );
 
-        List<String> lstErrors = new ArrayList<String>(  );
-        
+        List<String> lstErrors = new ArrayList<String>( );
+
         for ( SolrItem solrItem : listDocuments )
         {
-        	try
-			{
-        		SolrIndexerService.write( solrItem );
-			}
-			catch ( Exception e )
-			{
-				lstErrors.add( SolrIndexerService.buildErrorMessage( e ) );
-				AppLogService.error( COM_INDEXATION_ERROR , e );
-			}
+            try
+            {
+                SolrIndexerService.write( solrItem );
+            }
+            catch ( Exception e )
+            {
+                lstErrors.add( SolrIndexerService.buildErrorMessage( e ) );
+                AppLogService.error( COM_INDEXATION_ERROR, e );
+            }
         }
-        
+
         return lstErrors;
     }
 
     /**
      * {@inheritDoc}
      */
-    public boolean isEnable(  )
+    public boolean isEnable( )
     {
         return "true".equalsIgnoreCase( AppPropertiesService.getProperty( PROPERTY_INDEXER_ENABLE ) );
     }
@@ -122,10 +122,10 @@ public class SolrComarquagePublicIndexer implements SolrIndexer
     /**
      * {@inheritDoc}
      */
-    public List<Field> getAdditionalFields(  )
+    public List<Field> getAdditionalFields( )
     {
         // No additional fields for this indexer
-        return new ArrayList<Field>(  );
+        return new ArrayList<Field>( );
     }
 
     /**
@@ -149,7 +149,7 @@ public class SolrComarquagePublicIndexer implements SolrIndexer
     /**
      * {@inheritDoc}
      */
-    public List<String> getResourcesName(  )
+    public List<String> getResourcesName( )
     {
         // There is no incremental indexation
         return null;

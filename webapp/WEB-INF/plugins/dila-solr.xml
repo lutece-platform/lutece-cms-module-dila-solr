@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="no"?><plug-in>
     
     <!-- Plugin Informations -->
-    <name>comarquage-solr</name>
+    <name>dila-solr</name>
     <class>fr.paris.lutece.portal.service.plugin.PluginDefaultImplementation</class>
     <version>1.0.1</version>
     <documentation/>
     <installation/>
     <changes/>
     <user-guide/>
-    <description>module.comarquage.solr.module.description</description>
-    <provider>module.comarquage.solr.module.provider</provider>
+    <description>module.dila.solr.module.description</description>
+    <provider>module.dila.solr.module.provider</provider>
     <provider-url>http://lutece.paris.fr</provider-url>
-    <icon-url>images/admin/skin/plugins/comarquage/modules/solr/comarquage-solr.png</icon-url>
+    <icon-url>images/admin/skin/plugins/dila/modules/solr/dila-solr.png</icon-url>
     <copyright>Copyright 2001-2011 Mairie de Paris</copyright>
 	<core-version-dependency>
 		<min-core-version>2.9.9</min-core-version>
