@@ -47,7 +47,7 @@ import java.util.List;
 
 /**
  * The Dila indexer for Solr search platform
- * 
+ *
  */
 public class SolrDilaLocalIndexer implements SolrIndexer
 {
@@ -55,13 +55,12 @@ public class SolrDilaLocalIndexer implements SolrIndexer
     private static final String PROPERTY_NAME = "dila-solr.indexing.localIndexer.name";
     private static final String PROPERTY_VERSION = "dila-solr.indexing.localIndexer.version";
     private static final String PROPERTY_INDEXER_ENABLE = "dila-solr.indexing.localIndexer.enable";
-
     private static final String COM_INDEXATION_ERROR = "[SolrDilaLocalIndexer] An error occured during the indexation of a local element ";
 
     /**
      * {@inheritDoc}
      */
-    public String getDescription( )
+    public String getDescription(  )
     {
         return AppPropertiesService.getProperty( PROPERTY_DESCRIPTION );
     }
@@ -69,7 +68,7 @@ public class SolrDilaLocalIndexer implements SolrIndexer
     /**
      * {@inheritDoc}
      */
-    public String getName( )
+    public String getName(  )
     {
         return AppPropertiesService.getProperty( PROPERTY_NAME );
     }
@@ -77,7 +76,7 @@ public class SolrDilaLocalIndexer implements SolrIndexer
     /**
      * {@inheritDoc}
      */
-    public String getVersion( )
+    public String getVersion(  )
     {
         return AppPropertiesService.getProperty( PROPERTY_VERSION );
     }
@@ -85,15 +84,15 @@ public class SolrDilaLocalIndexer implements SolrIndexer
     /**
      * {@inheritDoc}
      */
-    public List<String> indexDocuments( )
+    public List<String> indexDocuments(  )
     {
         // Parses the local cards
-        DilaSolrLocalParser localParser = new DilaSolrLocalParser( );
+        DilaSolrLocalParser localParser = new DilaSolrLocalParser(  );
 
         // Gets the list of solr documents (to add to the index)
-        List<SolrItem> listDocuments = localParser.getLocalSolrItems( );
+        List<SolrItem> listDocuments = localParser.getLocalSolrItems(  );
 
-        List<String> lstErrors = new ArrayList<String>( );
+        List<String> lstErrors = new ArrayList<String>(  );
 
         for ( SolrItem solrItem : listDocuments )
         {
@@ -114,7 +113,7 @@ public class SolrDilaLocalIndexer implements SolrIndexer
     /**
      * {@inheritDoc}
      */
-    public boolean isEnable( )
+    public boolean isEnable(  )
     {
         return "true".equalsIgnoreCase( AppPropertiesService.getProperty( PROPERTY_INDEXER_ENABLE ) );
     }
@@ -122,10 +121,10 @@ public class SolrDilaLocalIndexer implements SolrIndexer
     /**
      * {@inheritDoc}
      */
-    public List<Field> getAdditionalFields( )
+    public List<Field> getAdditionalFields(  )
     {
         // No additional fields for this indexer
-        return new ArrayList<Field>( );
+        return new ArrayList<Field>(  );
     }
 
     /**
@@ -149,7 +148,7 @@ public class SolrDilaLocalIndexer implements SolrIndexer
     /**
      * {@inheritDoc}
      */
-    public List<String> getResourcesName( )
+    public List<String> getResourcesName(  )
     {
         // There is no incremental indexation
         return null;

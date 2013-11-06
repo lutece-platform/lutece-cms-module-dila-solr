@@ -40,10 +40,18 @@ import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.util.url.UrlItem;
 
+import org.apache.commons.lang.StringUtils;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+
 import java.io.File;
 import java.io.IOException;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -53,11 +61,6 @@ import java.util.Locale;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-
-import org.apache.commons.lang.StringUtils;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
 
 /**
@@ -124,14 +127,14 @@ public class DilaSolrPublicParser extends DefaultHandler
      * Initializes and launches the parsing of the public cards (public
      * constructor)
      */
-    public DilaSolrPublicParser( )
+    public DilaSolrPublicParser(  )
     {
         // Gets the list of CDC index keys
-        String strIndexKeys = AppPropertiesService.getProperty( PROPERTY_INDEXING_FRAGMENT
-                + PROPERTY_LIST_INDEX_KEYS_FRAGMENT );
+        String strIndexKeys = AppPropertiesService.getProperty( PROPERTY_INDEXING_FRAGMENT +
+                PROPERTY_LIST_INDEX_KEYS_FRAGMENT );
 
         // Initializes the Solr Item list
-        _listSolrItems = new ArrayList<SolrItem>( );
+        _listSolrItems = new ArrayList<SolrItem>(  );
 
         // Initializes the indexing type
         _strType = AppPropertiesService.getProperty( PROPERTY_INDEXING_TYPE );
@@ -140,13 +143,13 @@ public class DilaSolrPublicParser extends DefaultHandler
         _strSite = AppPropertiesService.getProperty( PROPERTY_SITE );
 
         // Initializes the prod url
-        _strProdUrl = SolrIndexerService.getBaseUrl( );
+        _strProdUrl = SolrIndexerService.getBaseUrl(  );
 
         try
         {
             // Initializes the SAX parser
-            SAXParserFactory factory = SAXParserFactory.newInstance( );
-            SAXParser parser = factory.newSAXParser( );
+            SAXParserFactory factory = SAXParserFactory.newInstance(  );
+            SAXParser parser = factory.newSAXParser(  );
 
             // Splits the list of CDC index keys
             String[] splitKeys = strIndexKeys.split( "," );
@@ -154,8 +157,8 @@ public class DilaSolrPublicParser extends DefaultHandler
             for ( int i = 0; i < splitKeys.length; i++ )
             {
                 // Gets the XML index file path
-                String strXmlDirectory = AppPropertiesService.getProperty( splitKeys[i] + STRING_POINT
-                        + PROPERTY_INDEXING_XML_BASE_VAR );
+                String strXmlDirectory = AppPropertiesService.getProperty( splitKeys[i] + STRING_POINT +
+                        PROPERTY_INDEXING_XML_BASE_VAR );
                 File xmlPath = new File( strXmlDirectory );
                 // Launches the parsing of all files in this directory
                 parseAllPublicCards( xmlPath, parser );
@@ -163,42 +166,42 @@ public class DilaSolrPublicParser extends DefaultHandler
         }
         catch ( ParserConfigurationException e )
         {
-            AppLogService.error( e.getMessage( ), e );
+            AppLogService.error( e.getMessage(  ), e );
         }
         catch ( SAXException e )
         {
-            AppLogService.error( e.getMessage( ), e );
+            AppLogService.error( e.getMessage(  ), e );
         }
     }
 
     /**
      * Launches the parsing on each public card
-     * 
+     *
      * @param fileBasePath the base path
      * @param parser the SAX parser
      */
     private void parseAllPublicCards( File fileBasePath, SAXParser parser )
     {
-        if ( fileBasePath.isFile( ) )
+        if ( fileBasePath.isFile(  ) )
         {
             // Launches the parsing of this public card (with the current handler)
             try
             {
-                parser.parse( fileBasePath.getAbsolutePath( ), this );
+                parser.parse( fileBasePath.getAbsolutePath(  ), this );
             }
             catch ( SAXException e )
             {
-                AppLogService.error( e.getMessage( ), e );
+                AppLogService.error( e.getMessage(  ), e );
             }
             catch ( IOException e )
             {
-                AppLogService.error( e.getMessage( ), e );
+                AppLogService.error( e.getMessage(  ), e );
             }
         }
         else
         {
             // Processes all the files of the current directory
-            File[] files = fileBasePath.listFiles( );
+            File[] files = fileBasePath.listFiles(  );
 
             for ( File fileCurrent : files )
             {
@@ -210,10 +213,10 @@ public class DilaSolrPublicParser extends DefaultHandler
 
     /**
      * Event received when starting the parsing operation
-     * 
+     *
      * @throws SAXException any SAX exception
      */
-    public void startDocument( ) throws SAXException
+    public void startDocument(  ) throws SAXException
     {
         // Initializes the XPATH
         _strXPath = STRING_EMPTY;
@@ -229,10 +232,10 @@ public class DilaSolrPublicParser extends DefaultHandler
 
     /**
      * Event received at the end of the parsing operation
-     * 
+     *
      * @throws SAXException any SAX exception
      */
-    public void endDocument( ) throws SAXException
+    public void endDocument(  ) throws SAXException
     {
         // Sets the ID 
 
@@ -269,16 +272,17 @@ public class DilaSolrPublicParser extends DefaultHandler
         if ( StringUtils.isNotEmpty( _strId ) )
         {
             // Creates a new lucene document
-            SolrItem item = new SolrItem( );
+            SolrItem item = new SolrItem(  );
 
-            item.setUrl( url.getUrl( ) );
+            item.setUrl( url.getUrl(  ) );
             item.setDate( dateUpdate );
             item.setUid( _strId );
             item.setContent( _strContents );
             item.setTitle( _strTitle );
             item.setType( _strType );
             item.setSite( _strSite );
-            String categories[] = new String[] { _strAudience };
+
+            String[] categories = new String[] { _strAudience };
             item.setCategorie( Arrays.asList( categories ) );
 
             // Adds the new item to the list
@@ -288,15 +292,16 @@ public class DilaSolrPublicParser extends DefaultHandler
 
     /**
      * Event received at the start of an element
-     * 
+     *
      * @param uri the Namespace URI
      * @param localName the local name
      * @param qName the qualified XML name
      * @param atts the attributes attached to the element
-     * 
+     *
      * @throws SAXException any SAX exception
      */
-    public void startElement( String uri, String localName, String qName, Attributes atts ) throws SAXException
+    public void startElement( String uri, String localName, String qName, Attributes atts )
+        throws SAXException
     {
         // Updates the XPath
         _strXPath += ( STRING_SLASH + qName );
@@ -313,14 +318,15 @@ public class DilaSolrPublicParser extends DefaultHandler
 
     /**
      * Event received at the end of an element
-     * 
+     *
      * @param uri the Namespace URI
      * @param localName the local name
      * @param qName the qualified XML name
-     * 
+     *
      * @throws SAXException any SAX exception
      */
-    public void endElement( String uri, String localName, String qName ) throws SAXException
+    public void endElement( String uri, String localName, String qName )
+        throws SAXException
     {
         // Updates the XPath
         _strXPath = _strXPath.substring( 0, _strXPath.lastIndexOf( STRING_SLASH ) );
@@ -328,14 +334,15 @@ public class DilaSolrPublicParser extends DefaultHandler
 
     /**
      * Event received when the analyzer encounters text (between two tags)
-     * 
+     *
      * @param ch the characters from the XML document
      * @param start the start position in the array
      * @param length the number of characters to read from the array
-     * 
+     *
      * @throws SAXException any SAX exception
      */
-    public void characters( char[] ch, int start, int length ) throws SAXException
+    public void characters( char[] ch, int start, int length )
+        throws SAXException
     {
         // Gets the XPath comparisons properties
         String strXPathDate = AppPropertiesService.getProperty( PROPERTY_XPATH_DATE );
@@ -387,10 +394,10 @@ public class DilaSolrPublicParser extends DefaultHandler
 
     /**
      * Gets the list of Solr items
-     * 
+     *
      * @return The list of Solr items
      */
-    public List<SolrItem> getPublicSolrItems( )
+    public List<SolrItem> getPublicSolrItems(  )
     {
         return _listSolrItems;
     }

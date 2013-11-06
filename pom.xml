@@ -53,6 +53,8 @@
 
 	<properties>
 		<componentName>Module Dila Solr</componentName>
+		<jiraProjectName>DILASOLR</jiraProjectName>
+        <jiraComponentId>12270</jiraComponentId>
 	</properties>
     <scm>
         <connection>scm:svn:http://dev.lutece.paris.fr/svn/lutece/portal/trunk/plugins/cms/module-dila-solr</connection>

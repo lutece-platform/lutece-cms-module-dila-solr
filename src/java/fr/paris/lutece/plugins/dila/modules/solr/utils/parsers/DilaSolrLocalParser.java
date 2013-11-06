@@ -43,11 +43,20 @@ import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.util.url.UrlItem;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -57,12 +66,6 @@ import java.util.Locale;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
 
 /**
@@ -121,56 +124,56 @@ public class DilaSolrLocalParser extends DefaultHandler
      * Initializes and launches the parsing of the local cards (public
      * constructor)
      */
-    public DilaSolrLocalParser( )
+    public DilaSolrLocalParser(  )
     {
         // Gets the local cards
-        List<LocalDTO> localCardsList = _dilaLocalService.findAll( );
+        List<LocalDTO> localCardsList = _dilaLocalService.findAll(  );
 
         // Initializes the SolrItem list
-        _listSolrItems = new ArrayList<SolrItem>( );
+        _listSolrItems = new ArrayList<SolrItem>(  );
 
         // Initializes the indexing type
         _strType = AppPropertiesService.getProperty( PROPERTY_INDEXING_TYPE );
 
         // Initializes the site
-        _strSite = SolrIndexerService.getWebAppName( );
+        _strSite = SolrIndexerService.getWebAppName(  );
 
         // Initializes the prod url
-        _strProdUrl = SolrIndexerService.getBaseUrl( );
+        _strProdUrl = SolrIndexerService.getBaseUrl(  );
 
         try
         {
             // Initializes the SAX parser
-            SAXParserFactory factory = SAXParserFactory.newInstance( );
-            SAXParser parser = factory.newSAXParser( );
+            SAXParserFactory factory = SAXParserFactory.newInstance(  );
+            SAXParser parser = factory.newSAXParser(  );
 
             // Launches the parsing on each local card
             parseAllLocalCards( localCardsList, parser );
         }
         catch ( ParserConfigurationException e )
         {
-            AppLogService.error( e.getMessage( ), e );
+            AppLogService.error( e.getMessage(  ), e );
         }
         catch ( SAXException e )
         {
-            AppLogService.error( e.getMessage( ), e );
+            AppLogService.error( e.getMessage(  ), e );
         }
     }
 
     /**
      * Launches the parsing on each local card
-     * 
+     *
      * @param localCardsList the local cards
      * @param parser the SAX parser
      */
     private void parseAllLocalCards( List<LocalDTO> localCardsList, SAXParser parser )
     {
-
         if ( CollectionUtils.isNotEmpty( localCardsList ) )
         {
             for ( LocalDTO currentCard : localCardsList )
             {
-                InputStream xmlInput = new ByteArrayInputStream( currentCard.getXml( ).getBytes( ) );
+                InputStream xmlInput = new ByteArrayInputStream( currentCard.getXml(  ).getBytes(  ) );
+
                 // Launches the parsing of this local card (with the current handler)
                 try
                 {
@@ -178,11 +181,11 @@ public class DilaSolrLocalParser extends DefaultHandler
                 }
                 catch ( SAXException e )
                 {
-                    AppLogService.error( e.getMessage( ), e );
+                    AppLogService.error( e.getMessage(  ), e );
                 }
                 catch ( IOException e )
                 {
-                    AppLogService.error( e.getMessage( ), e );
+                    AppLogService.error( e.getMessage(  ), e );
                 }
             }
         }
@@ -190,10 +193,10 @@ public class DilaSolrLocalParser extends DefaultHandler
 
     /**
      * Event received when starting the parsing operation
-     * 
+     *
      * @throws SAXException any SAX exception
      */
-    public void startDocument( ) throws SAXException
+    public void startDocument(  ) throws SAXException
     {
         // Initializes the XPATH
         _strXPath = STRING_EMPTY;
@@ -208,10 +211,10 @@ public class DilaSolrLocalParser extends DefaultHandler
 
     /**
      * Event received at the end of the parsing operation
-     * 
+     *
      * @throws SAXException any SAX exception
      */
-    public void endDocument( ) throws SAXException
+    public void endDocument(  ) throws SAXException
     {
         // Sets the full URL
         UrlItem url = new UrlItem( _strProdUrl );
@@ -239,16 +242,17 @@ public class DilaSolrLocalParser extends DefaultHandler
         if ( StringUtils.isNotEmpty( _strId ) )
         {
             // Creates a new lucene document
-            SolrItem item = new SolrItem( );
+            SolrItem item = new SolrItem(  );
 
-            item.setUrl( url.getUrl( ) );
+            item.setUrl( url.getUrl(  ) );
             item.setDate( dateUpdate );
             item.setUid( _strId );
             item.setContent( _strContents );
             item.setTitle( _strTitle );
             item.setType( _strType );
             item.setSite( _strSite );
-            String categories[] = new String[] { _strAudience };
+
+            String[] categories = new String[] { _strAudience };
             item.setCategorie( Arrays.asList( categories ) );
 
             // Adds the new item to the list
@@ -258,15 +262,16 @@ public class DilaSolrLocalParser extends DefaultHandler
 
     /**
      * Event received at the start of an element
-     * 
+     *
      * @param uri the Namespace URI
      * @param localName the local name
      * @param qName the qualified XML name
      * @param atts the attributes attached to the element
-     * 
+     *
      * @throws SAXException any SAX exception
      */
-    public void startElement( String uri, String localName, String qName, Attributes atts ) throws SAXException
+    public void startElement( String uri, String localName, String qName, Attributes atts )
+        throws SAXException
     {
         // Updates the XPath
         _strXPath += ( STRING_SLASH + qName );
@@ -283,14 +288,15 @@ public class DilaSolrLocalParser extends DefaultHandler
 
     /**
      * Event received at the end of an element
-     * 
+     *
      * @param uri the Namespace URI
      * @param localName the local name
      * @param qName the qualified XML name
-     * 
+     *
      * @throws SAXException any SAX exception
      */
-    public void endElement( String uri, String localName, String qName ) throws SAXException
+    public void endElement( String uri, String localName, String qName )
+        throws SAXException
     {
         // Updates the XPath
         _strXPath = _strXPath.substring( 0, _strXPath.lastIndexOf( STRING_SLASH ) );
@@ -298,14 +304,15 @@ public class DilaSolrLocalParser extends DefaultHandler
 
     /**
      * Event received when the analyzer encounters text (between two tags)
-     * 
+     *
      * @param ch the characters from the XML document
      * @param start the start position in the array
      * @param length the number of characters to read from the array
-     * 
+     *
      * @throws SAXException any SAX exception
      */
-    public void characters( char[] ch, int start, int length ) throws SAXException
+    public void characters( char[] ch, int start, int length )
+        throws SAXException
     {
         // Gets the XPath comparisons properties
         String strXPathDate = AppPropertiesService.getProperty( PROPERTY_XPATH_DATE );
@@ -323,6 +330,7 @@ public class DilaSolrLocalParser extends DefaultHandler
         {
             _strTitle += new String( ch, start, length );
         }
+
         // Gets the audience
         else if ( ( _strXPath != null ) && _strXPath.equals( strXPathAudience ) )
         {
@@ -342,10 +350,10 @@ public class DilaSolrLocalParser extends DefaultHandler
 
     /**
      * Gets the list of Solr items
-     * 
+     *
      * @return The list of Solr items
      */
-    public List<SolrItem> getLocalSolrItems( )
+    public List<SolrItem> getLocalSolrItems(  )
     {
         return _listSolrItems;
     }
