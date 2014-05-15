@@ -10,7 +10,7 @@
 	<groupId>fr.paris.lutece.plugins</groupId>
 	<artifactId>module-dila-solr</artifactId>
 	<packaging>lutece-plugin</packaging>
-	<version>1.1.1-SNAPSHOT</version>
+	<version>1.1.1</version>
 	<name>Module dila Solr</name>
 
 	<repositories>
@@ -57,8 +57,8 @@
         <jiraComponentId>12270</jiraComponentId>
 	</properties>
     <scm>
-        <connection>scm:svn:http://dev.lutece.paris.fr/svn/lutece/portal/trunk/plugins/cms/module-dila-solr</connection>
-        <developerConnection>scm:svn:https://dev.lutece.paris.fr/svn/lutece/portal/trunk/plugins/cms/module-dila-solr</developerConnection>
-        <url>http://dev.lutece.paris.fr/viewvc/lutece/portal/trunk/plugins/cms/module-dila-solr</url>
+        <connection>scm:svn:http://dev.lutece.paris.fr/svn/lutece/portal/tags/module-dila-solr-1.1.1</connection>
+        <developerConnection>scm:svn:https://dev.lutece.paris.fr/svn/lutece/portal/tags/module-dila-solr-1.1.1</developerConnection>
+        <url>http://dev.lutece.paris.fr/viewvc/lutece/portal/tags/module-dila-solr-1.1.1</url>
     </scm>
 </project>
